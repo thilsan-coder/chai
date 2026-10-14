@@ -3,12 +3,15 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
+import { AuthProvider } from './context/AuthContext';
 
 export const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AppLayout />}>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+
           <Route index element={<DashboardPage />} />
 
           <Route
@@ -241,7 +244,8 @@ export const App: React.FC = () => {
         </Route>
       </Routes>
     </BrowserRouter>
-  );
+  </AuthProvider>
+);
 };
 
 export default App;
