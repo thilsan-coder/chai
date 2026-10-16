@@ -2,8 +2,11 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
+import { MenuPage } from './pages/MenuPage';
+import { CategoriesPage } from './pages/CategoriesPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { AuthProvider } from './context/AuthContext';
+
 
 export const App: React.FC = () => {
   return (
@@ -53,42 +56,9 @@ export const App: React.FC = () => {
             }
           />
 
-          <Route
-            path="menu"
-            element={
-              <PlaceholderPage
-                title="Menu & Product Management"
-                subtitle="Configure chai, fast-food items, pricing, variants, and availability"
-                partTag="Planned: Part 3"
-                moduleCode="MOD-04-MENU"
-                features={[
-                  'Chai, coffee, burgers, submarines & mojitos',
-                  'Pricing in Sri Lankan Rupees (LKR)',
-                  'Item variants (Single, Double, Regular, Large)',
-                  'Add-ons & custom toppings',
-                  'Instant item availability switch (In Stock / Out)',
-                ]}
-              />
-            }
-          />
+          <Route path="menu" element={<MenuPage />} />
+          <Route path="categories" element={<CategoriesPage />} />
 
-          <Route
-            path="categories"
-            element={
-              <PlaceholderPage
-                title="Category Management"
-                subtitle="Manage menu categories, display orders, and POS quick filters"
-                partTag="Planned: Part 3"
-                moduleCode="MOD-05-CATEGORIES"
-                features={[
-                  'Category hierarchy and icons',
-                  'Sort order for fast POS touch access',
-                  'Active / Inactive category toggles',
-                  'Item count per category overview',
-                ]}
-              />
-            }
-          />
 
           <Route
             path="combos"
