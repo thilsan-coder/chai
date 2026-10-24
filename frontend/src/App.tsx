@@ -14,7 +14,9 @@ import { CustomersPage } from './pages/CustomersPage';
 import { ExpensesPage } from './pages/ExpensesPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { CombosPage } from './pages/CombosPage';
-import { PlaceholderPage } from './pages/PlaceholderPage';
+import { BankTransfersPage } from './pages/BankTransfersPage';
+import { UsersPage } from './pages/UsersPage';
+import { SettingsPage } from './pages/SettingsPage';
 import { AuthProvider } from './context/AuthContext';
 
 
@@ -36,7 +38,6 @@ export const App: React.FC = () => {
           <Route path="menu" element={<MenuPage />} />
           <Route path="categories" element={<CategoriesPage />} />
 
-
           <Route path="combos" element={<CombosPage />} />
 
           <Route path="inventory" element={<InventoryPage />} />
@@ -44,63 +45,13 @@ export const App: React.FC = () => {
 
           <Route path="expenses" element={<ExpensesPage />} />
 
-          <Route
-            path="bank-transfers"
-            element={
-              <PlaceholderPage
-                title="Bank Transfer Verification"
-                subtitle="Owner workflow for verifying customer bank transfer slips and references"
-                partTag="Planned: Part 6"
-                moduleCode="MOD-10-BANK"
-                features={[
-                  'Bank transfer reference and amount checking',
-                  'Slip / proof review workflow',
-                  'Owner approval & reject buttons',
-                  'Verified by and verification timestamp log',
-                  'Prevent automatic verification without owner review',
-                ]}
-              />
-            }
-          />
+          <Route path="bank-transfers" element={<BankTransfersPage />} />
 
           <Route path="reports" element={<ReportsPage />} />
 
-          <Route
-            path="users"
-            element={
-              <PlaceholderPage
-                title="Staff & Role-Based Access"
-                subtitle="Owner, Manager, Cashier, Kitchen staff, and Stock manager roles"
-                partTag="Planned: Part 11"
-                moduleCode="MOD-12-ROLES"
-                features={[
-                  'Role-based permissions (Owner, Cashier, Kitchen)',
-                  'Staff login credentials and shift tracking',
-                  'Restricted financial reports & verification access',
-                  'Audit trail for sensitive actions',
-                ]}
-              />
-            }
-          />
+          <Route path="users" element={<UsersPage />} />
 
-          <Route
-            path="settings"
-            element={
-              <PlaceholderPage
-                title="Business Settings & Configuration"
-                subtitle="Cafe profile, Sri Lankan Rupee formatting, token reset rules, and shift hours"
-                partTag="Planned: Part 11"
-                moduleCode="MOD-13-SETTINGS"
-                features={[
-                  'Oonjal Chai store profile and official logo display',
-                  'Operating hours (4:00 PM – 1:00 AM Asia/Colombo)',
-                  'Daily token numbering reset rules',
-                  'Receipt header and footer customization',
-                  'Thermal printer template setup',
-                ]}
-              />
-            }
-          />
+          <Route path="settings" element={<SettingsPage />} />
 
           {/* Catch-all redirect to Dashboard */}
           <Route path="*" element={<Navigate to="/" replace />} />

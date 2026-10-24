@@ -33,6 +33,12 @@ class Order extends Model
         'notes',
         'user_id',
         'customer_id',
+        'bank_name',
+        'bank_reference',
+        'verification_status',
+        'verified_by',
+        'verified_at',
+        'verification_notes',
     ];
 
     protected $casts = [
@@ -45,6 +51,7 @@ class Order extends Model
         'change_due' => 'float',
         'points_earned' => 'integer',
         'points_redeemed' => 'integer',
+        'verified_at' => 'datetime',
     ];
 
     public function items(): HasMany
@@ -60,6 +67,11 @@ class Order extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function verifier(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'verified_by');
     }
 
     /**

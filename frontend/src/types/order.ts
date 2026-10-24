@@ -49,6 +49,16 @@ export interface Order {
     id: number;
     name: string;
   };
+  bank_name?: string | null;
+  bank_reference?: string | null;
+  verification_status?: 'pending_verification' | 'verified' | 'rejected' | null;
+  verified_by?: number | null;
+  verified_at?: string | null;
+  verification_notes?: string | null;
+  verifier?: {
+    id: number;
+    name: string;
+  } | null;
   items: OrderItem[];
   created_at: string;
   updated_at: string;

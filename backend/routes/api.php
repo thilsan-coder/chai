@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\SystemController;
 use App\Http\Controllers\Api\TableController;
+use App\Http\Controllers\Api\BankVerificationController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -92,6 +94,18 @@ Route::delete('/expenses/{id}', [ExpenseController::class, 'destroy']);
 // Financial Reports & P&L Analytics (Part 10)
 Route::get('/reports/dashboard', [ReportController::class, 'dashboard']);
 Route::get('/reports/daily-sessions', [ReportController::class, 'dailySessions']);
+
+// Bank Transfer Verification (Part 12 - MOD-10)
+Route::get('/bank-transfers', [BankVerificationController::class, 'index']);
+Route::post('/bank-transfers/{id}/verify', [BankVerificationController::class, 'verify']);
+Route::post('/bank-transfers/{id}/reject', [BankVerificationController::class, 'reject']);
+Route::patch('/bank-transfers/{id}/reference', [BankVerificationController::class, 'updateReference']);
+
+// Staff & Role-Based Access (Part 12 - MOD-12)
+Route::get('/users', [UserController::class, 'index']);
+Route::post('/users', [UserController::class, 'store']);
+Route::put('/users/{id}', [UserController::class, 'update']);
+Route::post('/users/{id}/toggle-active', [UserController::class, 'toggleActive']);
 
 // Authenticated staff routes
 Route::middleware('auth:sanctum')->group(function () {

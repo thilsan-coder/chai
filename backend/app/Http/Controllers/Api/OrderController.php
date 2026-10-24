@@ -78,6 +78,8 @@ class OrderController extends Controller
             'customer_name' => 'nullable|string|max:100',
             'customer_phone' => 'nullable|string|max:20',
             'payment_method' => 'required|in:cash,card,bank_transfer,qr,split',
+            'bank_name' => 'nullable|string|max:50',
+            'bank_reference' => 'nullable|string|max:100',
             'payment_status' => 'nullable|in:unpaid,paid,partially_paid,refunded',
             'subtotal' => 'required|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
@@ -138,6 +140,8 @@ class OrderController extends Controller
                     $customer->recalculateTier();
                 }
 
+                $isBankOrQr = in_array($validated['payment_method'], ['bank_transfer', 'qr']);
+
                 $order = Order::create([
                     'order_number' => $orderNumber,
                     'token_number' => $tokenNumber,
@@ -148,6 +152,9 @@ class OrderController extends Controller
                     'status' => 'pending',
                     'payment_status' => $validated['payment_status'] ?? 'paid',
                     'payment_method' => $validated['payment_method'],
+                    'bank_name' => $validated['bank_name'] ?? null,
+                    'bank_reference' => $validated['bank_reference'] ?? null,
+                    'verification_status' => $isBankOrQr ? 'pending_verification' : 'verified',
                     'subtotal' => $subtotal,
                     'discount' => $discount,
                     'tax' => $tax,
