@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             InventorySeeder::class,
             CustomerSeeder::class,
             ExpenseSeeder::class,
+            ComboSeeder::class,
         ]);
     }
 }

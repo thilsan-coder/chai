@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\KdsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ComboController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ExpenseController;
@@ -30,6 +31,14 @@ Route::get('/categories/{category}', [CategoryController::class, 'show']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product}', [ProductController::class, 'show']);
 Route::post('/products/{product}/toggle-availability', [ProductController::class, 'toggleAvailability']);
+
+// Combos & Bundle Promotions (Part 11)
+Route::get('/combos', [ComboController::class, 'index']);
+Route::get('/combos/{id}', [ComboController::class, 'show']);
+Route::post('/combos', [ComboController::class, 'store']);
+Route::put('/combos/{id}', [ComboController::class, 'update']);
+Route::post('/combos/{id}/toggle-status', [ComboController::class, 'toggleStatus']);
+Route::delete('/combos/{id}', [ComboController::class, 'destroy']);
 
 // Order management (Available for POS billing and KDS)
 Route::get('/orders/daily-summary', [OrderController::class, 'dailySummary']);

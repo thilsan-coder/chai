@@ -13,6 +13,7 @@ import { PurchasesPage } from './pages/PurchasesPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { ExpensesPage } from './pages/ExpensesPage';
 import { ReportsPage } from './pages/ReportsPage';
+import { CombosPage } from './pages/CombosPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { AuthProvider } from './context/AuthContext';
 
@@ -36,24 +37,7 @@ export const App: React.FC = () => {
           <Route path="categories" element={<CategoriesPage />} />
 
 
-          <Route
-            path="combos"
-            element={
-              <PlaceholderPage
-                title="Combo Offers & Promotions"
-                subtitle="Create bundle deals (e.g. Burger + Mojito combo) with custom discounts"
-                partTag="Planned: Part 7"
-                moduleCode="MOD-06-COMBOS"
-                features={[
-                  'Multi-product bundle configuration',
-                  'Regular vs combo discounted price calculation',
-                  'Savings banner for customers',
-                  'Start and end validity dates',
-                  'Stock deduction for individual ingredients',
-                ]}
-              />
-            }
-          />
+          <Route path="combos" element={<CombosPage />} />
 
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="purchases" element={<PurchasesPage />} />

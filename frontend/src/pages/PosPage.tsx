@@ -3,14 +3,18 @@ import { useSearchParams } from 'react-router-dom';
 import { menuService } from '../services/menu';
 import { orderService } from '../services/orders';
 import { customerService } from '../services/customers';
+import { comboService } from '../services/combos';
 import type { Category, Product } from '../types/menu';
 import type { Customer } from '../types/customer';
+import type { Combo } from '../types/combo';
 import type { CartItem, CreateOrderPayload, DailySummary, Order, OrderType, PaymentMethod } from '../types/order';
 import { ProductCard } from '../components/pos/ProductCard';
 import { VariantAddonModal } from '../components/pos/VariantAddonModal';
 import { CartPanel } from '../components/pos/CartPanel';
 import { CheckoutModal } from '../components/pos/CheckoutModal';
 import { ReceiptModal } from '../components/pos/ReceiptModal';
+import { Sparkles, Gift } from 'lucide-react';
+import { formatCurrency } from '../constants/theme';
 
 export const PosPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -19,6 +23,8 @@ export const PosPage: React.FC = () => {
   // Menu & Products State
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [combos, setCombos] = useState<Combo[]>([]);
+  const [showCombosOnly, setShowCombosOnly] = useState<boolean>(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isLoadingMenu, setIsLoadingMenu] = useState<boolean>(true);
@@ -89,13 +95,15 @@ export const PosPage: React.FC = () => {
     const loadInitialData = async () => {
       try {
         setIsLoadingMenu(true);
-        const [cats, prods, summary] = await Promise.all([
+        const [cats, prods, comboRes, summary] = await Promise.all([
           menuService.getCategories(true),
           menuService.getProducts(),
+          comboService.getCombos(true).catch(() => ({ combos: [] })),
           orderService.getDailySummary().catch(() => null),
         ]);
         setCategories(cats);
         setProducts(prods);
+        setCombos(comboRes.combos);
         if (summary) setDailySummary(summary);
       } catch (err) {
         console.error('Error loading POS menu:', err);
@@ -170,6 +178,39 @@ export const PosPage: React.FC = () => {
       }
     });
     showNotification(`Added ${item.productName} (${item.variantName || 'Regular'})`);
+  };
+
+  // Add Combo deal to cart
+  const handleAddComboToCart = (combo: Combo) => {
+    const cartItemId = `combo_${combo.id}`;
+    const bundledItemsDesc = combo.items
+      .map((it) => `${it.quantity}x ${it.product?.name || 'Item'}`)
+      .join(' + ');
+
+    setCartItems((prev) => {
+      const existingIndex = prev.findIndex((i) => i.cartItemId === cartItemId);
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        updated[existingIndex].quantity += 1;
+        return updated;
+      } else {
+        return [
+          ...prev,
+          {
+            cartItemId,
+            productId: 0,
+            productName: `[Combo] ${combo.name}`,
+            categoryName: 'Combos & Offers',
+            basePrice: Number(combo.combo_price),
+            unitPrice: Number(combo.combo_price),
+            quantity: 1,
+            addons: [],
+            notes: `Bundle: ${bundledItemsDesc} (Saved ${formatCurrency(combo.savings_amount)})`,
+          },
+        ];
+      }
+    });
+    showNotification(`Added Bundle: ${combo.name} (Rs. ${combo.combo_price})`);
   };
 
   // Update quantity in cart
@@ -382,22 +423,46 @@ export const PosPage: React.FC = () => {
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
               <button
                 type="button"
-                onClick={() => setSelectedCategoryId(null)}
+                onClick={() => {
+                  setShowCombosOnly(false);
+                  setSelectedCategoryId(null);
+                }}
                 className={`shrink-0 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
-                  selectedCategoryId === null
+                  !showCombosOnly && selectedCategoryId === null
                     ? 'bg-oonjal-gold text-oonjal-black shadow-md shadow-oonjal-gold/20'
                     : 'border border-oonjal-border bg-oonjal-surface text-zinc-300 hover:border-oonjal-border-light hover:text-white'
                 }`}
               >
                 All Items ({products.length})
               </button>
+
+              {/* Combos Pill */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCombosOnly(true);
+                  setSelectedCategoryId(null);
+                }}
+                className={`shrink-0 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  showCombosOnly
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black shadow-md shadow-amber-500/30'
+                    : 'border border-amber-500/40 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Combos &amp; Offers ({combos.length})</span>
+              </button>
+
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => setSelectedCategoryId(cat.id)}
+                  onClick={() => {
+                    setShowCombosOnly(false);
+                    setSelectedCategoryId(cat.id);
+                  }}
                   className={`shrink-0 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
-                    selectedCategoryId === cat.id
+                    !showCombosOnly && selectedCategoryId === cat.id
                       ? 'bg-oonjal-gold text-oonjal-black shadow-md shadow-oonjal-gold/20'
                       : 'border border-oonjal-border bg-oonjal-surface text-zinc-300 hover:border-oonjal-border-light hover:text-white'
                   }`}
@@ -408,7 +473,7 @@ export const PosPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Products Grid */}
+          {/* Products or Combos Grid */}
           {isLoadingMenu ? (
             <div className="flex h-64 items-center justify-center rounded-2xl border border-oonjal-border bg-oonjal-card">
               <div className="flex flex-col items-center gap-2">
@@ -416,6 +481,63 @@ export const PosPage: React.FC = () => {
                 <span className="text-xs text-zinc-400">Loading Oonjal Chai menu...</span>
               </div>
             </div>
+          ) : showCombosOnly ? (
+            /* Combos Grid */
+            combos.length === 0 ? (
+              <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-oonjal-border bg-oonjal-card text-center p-6">
+                <Gift className="w-8 h-8 text-zinc-600 mb-2" />
+                <p className="text-sm font-semibold text-zinc-300">No active combo deals</p>
+                <p className="text-xs text-zinc-500 mt-1">Configure deals in Menu &gt; Combos &amp; Offers</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {combos.map((combo) => (
+                  <div
+                    key={combo.id}
+                    onClick={() => handleAddComboToCart(combo)}
+                    className="p-4 rounded-2xl border border-oonjal-border bg-oonjal-card hover:border-oonjal-gold/60 transition-all cursor-pointer shadow-sm hover:shadow-lg hover:shadow-oonjal-gold/5 flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        {combo.badge && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                            {combo.badge}
+                          </span>
+                        )}
+                        <span className="text-[10px] text-emerald-400 font-bold">
+                          Save {formatCurrency(combo.savings_amount)}
+                        </span>
+                      </div>
+                      <h4 className="font-bold text-sm text-oonjal-cream group-hover:text-oonjal-gold transition-colors">
+                        {combo.name}
+                      </h4>
+                      {combo.tamil_name && (
+                        <p className="text-[11px] text-amber-400/80 font-medium">
+                          {combo.tamil_name}
+                        </p>
+                      )}
+                      <p className="text-[11px] text-zinc-400 mt-1">
+                        {combo.items.map((it) => `${it.quantity}x ${it.product?.name || 'Item'}`).join(' + ')}
+                      </p>
+                    </div>
+
+                    <div className="mt-3 pt-2.5 border-t border-oonjal-border flex items-baseline justify-between">
+                      <div>
+                        <span className="text-[10px] text-zinc-500 line-through mr-1.5">
+                          {formatCurrency(combo.regular_price)}
+                        </span>
+                        <span className="text-base font-extrabold text-oonjal-gold font-mono">
+                          {formatCurrency(combo.combo_price)}
+                        </span>
+                      </div>
+                      <span className="px-2.5 py-1 rounded-lg bg-amber-500 text-black text-[11px] font-bold shadow-sm group-hover:bg-amber-400 transition-colors">
+                        + Add Combo
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
           ) : filteredProducts.length === 0 ? (
             <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-oonjal-border bg-oonjal-card text-center p-6">
               <p className="text-sm font-semibold text-zinc-300">No items found</p>
