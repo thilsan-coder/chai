@@ -38,31 +38,37 @@ export const PosPage: React.FC = () => {
 
   // Auto lookup customer on phone entry
   useEffect(() => {
-    let isMounted = true;
     const clean = customerPhone.trim();
-    if (clean.length >= 4) {
-      const timer = setTimeout(async () => {
-        try {
-          const found = await customerService.lookup(clean);
-          if (isMounted) {
-            setMatchedCustomer(found);
-            if (found && !customerName) {
-              setCustomerName(found.name);
-            }
+    if (clean.length < 4) return;
+
+    let isMounted = true;
+    const timer = setTimeout(async () => {
+      try {
+        const found = await customerService.lookup(clean);
+        if (isMounted) {
+          setMatchedCustomer(found);
+          if (found && !customerName) {
+            setCustomerName(found.name);
           }
-        } catch {
-          if (isMounted) setMatchedCustomer(null);
         }
-      }, 350);
-      return () => {
-        clearTimeout(timer);
-        isMounted = false;
-      };
-    } else {
+      } catch {
+        if (isMounted) setMatchedCustomer(null);
+      }
+    }, 350);
+
+    return () => {
+      clearTimeout(timer);
+      isMounted = false;
+    };
+  }, [customerPhone, customerName]);
+
+  const handleCustomerPhoneChange = (newPhone: string) => {
+    setCustomerPhone(newPhone);
+    if (newPhone.trim().length < 4) {
       setMatchedCustomer(null);
       setPointsRedeemed(0);
     }
-  }, [customerPhone, customerName]);
+  };
 
   // Modals State
   const [selectedProductForCustomization, setSelectedProductForCustomization] = useState<Product | null>(null);
@@ -446,7 +452,7 @@ export const PosPage: React.FC = () => {
             onOrderTypeChange={setOrderType}
             onTableNumberChange={setTableNumber}
             onCustomerNameChange={setCustomerName}
-            onCustomerPhoneChange={setCustomerPhone}
+            onCustomerPhoneChange={handleCustomerPhoneChange}
             onDiscountChange={setDiscount}
             onOpenCheckout={() => setIsCheckoutOpen(true)}
           />
