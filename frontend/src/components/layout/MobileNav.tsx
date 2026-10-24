@@ -18,6 +18,7 @@ import {
   Settings,
   Clock,
   Flame,
+  Armchair,
 } from 'lucide-react';
 import { navigationSections, BUSINESS_CONFIG } from '../../constants/theme';
 
@@ -36,6 +37,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Users,
   Settings,
   Flame,
+  Armchair,
 };
 
 export interface MobileNavProps {

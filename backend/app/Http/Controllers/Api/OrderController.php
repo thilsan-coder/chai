@@ -149,6 +149,18 @@ class OrderController extends Controller
                     ]);
                 }
 
+                // If dine-in with table number, update table status to occupied
+                if (!empty($order->table_number) && class_exists(\App\Models\Table::class)) {
+                    $table = \App\Models\Table::where('code', $order->table_number)
+                        ->orWhere('name', $order->table_number)
+                        ->first();
+                    if ($table) {
+                        $table->current_order_id = $order->id;
+                        $table->status = 'occupied';
+                        $table->save();
+                    }
+                }
+
                 return $order->load(['items', 'user:id,name']);
             });
 

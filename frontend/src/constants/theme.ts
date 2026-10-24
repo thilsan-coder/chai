@@ -22,6 +22,7 @@ export const navigationSections = [
     items: [
       { name: 'Dashboard', path: '/', icon: 'LayoutDashboard' },
       { name: 'POS Counter', path: '/pos', icon: 'Calculator', badge: 'Fast POS' },
+      { name: 'Tables & Floor', path: '/tables', icon: 'Armchair' },
       { name: 'Orders & Tokens', path: '/orders', icon: 'Receipt', badge: 'Active' },
       { name: 'Kitchen KDS', path: '/kds', icon: 'Flame', badge: 'Live' },
     ],

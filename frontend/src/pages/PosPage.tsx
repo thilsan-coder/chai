@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { menuService } from '../services/menu';
 import { orderService } from '../services/orders';
 import type { Category, Product } from '../types/menu';
@@ -10,6 +11,9 @@ import { CheckoutModal } from '../components/pos/CheckoutModal';
 import { ReceiptModal } from '../components/pos/ReceiptModal';
 
 export const PosPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const initialTable = searchParams.get('table') || '';
+
   // Menu & Products State
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -23,7 +27,7 @@ export const PosPage: React.FC = () => {
   // Cart State
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [orderType, setOrderType] = useState<OrderType>('dine_in');
-  const [tableNumber, setTableNumber] = useState<string>('');
+  const [tableNumber, setTableNumber] = useState<string>(initialTable);
   const [customerName, setCustomerName] = useState<string>('');
   const [customerPhone, setCustomerPhone] = useState<string>('');
   const [discount, setDiscount] = useState<number>(0);

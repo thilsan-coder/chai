@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\KdsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SystemController;
+use App\Http\Controllers\Api\TableController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +37,13 @@ Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 Route::get('/kds/orders', [KdsController::class, 'orders']);
 Route::patch('/kds/orders/{id}/status', [KdsController::class, 'updateStatus']);
 Route::get('/kds/stats', [KdsController::class, 'stats']);
+
+// Table & Dine-in Floor Management (Part 6)
+Route::get('/tables', [TableController::class, 'index']);
+Route::post('/tables', [TableController::class, 'store']);
+Route::put('/tables/{id}', [TableController::class, 'update']);
+Route::post('/tables/{id}/transfer', [TableController::class, 'transfer']);
+Route::post('/tables/{id}/release', [TableController::class, 'release']);
 
 // Authenticated staff routes
 Route::middleware('auth:sanctum')->group(function () {
