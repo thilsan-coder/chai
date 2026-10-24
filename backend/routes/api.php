@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\KdsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\InventoryController;
+use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\SystemController;
 use App\Http\Controllers\Api\TableController;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +46,21 @@ Route::post('/tables', [TableController::class, 'store']);
 Route::put('/tables/{id}', [TableController::class, 'update']);
 Route::post('/tables/{id}/transfer', [TableController::class, 'transfer']);
 Route::post('/tables/{id}/release', [TableController::class, 'release']);
+
+// Inventory & Raw Stock Management (Part 7)
+Route::get('/inventory', [InventoryController::class, 'index']);
+Route::post('/inventory', [InventoryController::class, 'store']);
+Route::put('/inventory/{id}', [InventoryController::class, 'update']);
+Route::post('/inventory/{id}/stock-in', [InventoryController::class, 'stockIn']);
+Route::post('/inventory/{id}/adjust', [InventoryController::class, 'stockAdjust']);
+Route::get('/inventory/alerts/low-stock', [InventoryController::class, 'lowStockAlerts']);
+Route::get('/inventory/recipes/{productId}', [InventoryController::class, 'recipes']);
+
+// Suppliers & Vendors (Part 7)
+Route::get('/suppliers', [SupplierController::class, 'index']);
+Route::post('/suppliers', [SupplierController::class, 'store']);
+Route::put('/suppliers/{id}', [SupplierController::class, 'update']);
+Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy']);
 
 // Authenticated staff routes
 Route::middleware('auth:sanctum')->group(function () {

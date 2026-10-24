@@ -8,6 +8,8 @@ import { KdsPage } from './pages/KdsPage';
 import { TablesPage } from './pages/TablesPage';
 import { MenuPage } from './pages/MenuPage';
 import { CategoriesPage } from './pages/CategoriesPage';
+import { InventoryPage } from './pages/InventoryPage';
+import { PurchasesPage } from './pages/PurchasesPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { AuthProvider } from './context/AuthContext';
 
@@ -49,42 +51,8 @@ export const App: React.FC = () => {
             }
           />
 
-          <Route
-            path="inventory"
-            element={
-              <PlaceholderPage
-                title="Raw Materials & Stock Inventory"
-                subtitle="Track cafe ingredients, wastage, low stock alerts, and recipe consumption"
-                partTag="Planned: Part 8"
-                moduleCode="MOD-07-STOCK"
-                features={[
-                  'Tea powder, milk, sugar, chicken, buns, oil, sauces',
-                  'Ingredient recipes linked to selling menu items',
-                  'Automatic stock deduction on order completion',
-                  'Low-stock alerts & minimum reorder levels',
-                  'Wastage logging and inventory valuation',
-                ]}
-              />
-            }
-          />
-
-          <Route
-            path="purchases"
-            element={
-              <PlaceholderPage
-                title="Purchasing & Supplier Management"
-                subtitle="Manage supplier profiles, ingredient stock-in records, and balances"
-                partTag="Planned: Part 8"
-                moduleCode="MOD-08-SUPPLIERS"
-                features={[
-                  'Supplier directories and contact info',
-                  'Purchase invoice recording (Stock-in)',
-                  'Payment tracking and outstanding balances',
-                  'Purchase history audit log',
-                ]}
-              />
-            }
-          />
+          <Route path="inventory" element={<InventoryPage />} />
+          <Route path="purchases" element={<PurchasesPage />} />
 
           <Route
             path="expenses"

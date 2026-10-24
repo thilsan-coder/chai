@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             StaffUserSeeder::class,
             MenuSeeder::class,
             TableSeeder::class,
+            InventorySeeder::class,
         ]);
     }
 }
