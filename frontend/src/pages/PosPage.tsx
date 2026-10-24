@@ -2,7 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { menuService } from '../services/menu';
 import { orderService } from '../services/orders';
+import { customerService } from '../services/customers';
 import type { Category, Product } from '../types/menu';
+import type { Customer } from '../types/customer';
 import type { CartItem, CreateOrderPayload, DailySummary, Order, OrderType, PaymentMethod } from '../types/order';
 import { ProductCard } from '../components/pos/ProductCard';
 import { VariantAddonModal } from '../components/pos/VariantAddonModal';
@@ -31,6 +33,36 @@ export const PosPage: React.FC = () => {
   const [customerName, setCustomerName] = useState<string>('');
   const [customerPhone, setCustomerPhone] = useState<string>('');
   const [discount, setDiscount] = useState<number>(0);
+  const [matchedCustomer, setMatchedCustomer] = useState<Customer | null>(null);
+  const [pointsRedeemed, setPointsRedeemed] = useState<number>(0);
+
+  // Auto lookup customer on phone entry
+  useEffect(() => {
+    let isMounted = true;
+    const clean = customerPhone.trim();
+    if (clean.length >= 4) {
+      const timer = setTimeout(async () => {
+        try {
+          const found = await customerService.lookup(clean);
+          if (isMounted) {
+            setMatchedCustomer(found);
+            if (found && !customerName) {
+              setCustomerName(found.name);
+            }
+          }
+        } catch {
+          if (isMounted) setMatchedCustomer(null);
+        }
+      }, 350);
+      return () => {
+        clearTimeout(timer);
+        isMounted = false;
+      };
+    } else {
+      setMatchedCustomer(null);
+      setPointsRedeemed(0);
+    }
+  }, [customerPhone, customerName]);
 
   // Modals State
   const [selectedProductForCustomization, setSelectedProductForCustomization] = useState<Product | null>(null);
@@ -158,12 +190,29 @@ export const PosPage: React.FC = () => {
       setCustomerName('');
       setCustomerPhone('');
       setTableNumber('');
+      setMatchedCustomer(null);
+      setPointsRedeemed(0);
     }
   };
 
   // Totals calculations
   const subtotal = cartItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
   const grandTotal = Math.max(0, subtotal - discount);
+
+  // Toggle loyalty points redemption
+  const handleToggleRedeemPoints = () => {
+    if (!matchedCustomer) return;
+    if (pointsRedeemed > 0) {
+      setDiscount((prev) => Math.max(0, prev - pointsRedeemed));
+      setPointsRedeemed(0);
+      showNotification('Points redemption cancelled');
+    } else {
+      const maxDiscount = Math.min(matchedCustomer.loyalty_points, subtotal);
+      setPointsRedeemed(maxDiscount);
+      setDiscount(maxDiscount);
+      showNotification(`Redeemed ${maxDiscount} points for Rs. ${maxDiscount} discount!`);
+    }
+  };
 
   // Submit Order from Checkout Modal
   const handleConfirmOrder = async (paymentData: {
@@ -180,8 +229,10 @@ export const PosPage: React.FC = () => {
       const payload: CreateOrderPayload = {
         order_type: orderType,
         table_number: orderType === 'dine_in' ? tableNumber || undefined : undefined,
+        customer_id: matchedCustomer?.id,
         customer_name: customerName.trim() || undefined,
         customer_phone: customerPhone.trim() || undefined,
+        points_redeemed: pointsRedeemed > 0 ? pointsRedeemed : undefined,
         payment_method: paymentData.paymentMethod,
         payment_status: 'paid',
         subtotal,
@@ -386,6 +437,9 @@ export const PosPage: React.FC = () => {
             customerName={customerName}
             customerPhone={customerPhone}
             discount={discount}
+            matchedCustomer={matchedCustomer}
+            pointsRedeemed={pointsRedeemed}
+            onToggleRedeemPoints={handleToggleRedeemPoints}
             onUpdateQuantity={handleUpdateQuantity}
             onRemoveItem={handleRemoveItem}
             onClearCart={handleClearCart}

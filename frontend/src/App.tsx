@@ -10,6 +10,7 @@ import { MenuPage } from './pages/MenuPage';
 import { CategoriesPage } from './pages/CategoriesPage';
 import { InventoryPage } from './pages/InventoryPage';
 import { PurchasesPage } from './pages/PurchasesPage';
+import { CustomersPage } from './pages/CustomersPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { AuthProvider } from './context/AuthContext';
 
@@ -27,6 +28,7 @@ export const App: React.FC = () => {
           <Route path="tables" element={<TablesPage />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="kds" element={<KdsPage />} />
+          <Route path="customers" element={<CustomersPage />} />
 
           <Route path="menu" element={<MenuPage />} />
           <Route path="categories" element={<CategoriesPage />} />

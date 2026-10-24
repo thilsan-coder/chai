@@ -1,5 +1,7 @@
 import React from 'react';
+import { Crown, Award, Sparkles } from 'lucide-react';
 import type { CartItem, OrderType } from '../../types/order';
+import type { Customer } from '../../types/customer';
 
 interface CartPanelProps {
   items: CartItem[];
@@ -8,6 +10,9 @@ interface CartPanelProps {
   customerName: string;
   customerPhone: string;
   discount: number;
+  matchedCustomer?: Customer | null;
+  pointsRedeemed?: number;
+  onToggleRedeemPoints?: () => void;
   onUpdateQuantity: (cartItemId: string, newQty: number) => void;
   onRemoveItem: (cartItemId: string) => void;
   onClearCart: () => void;
@@ -28,6 +33,9 @@ export const CartPanel: React.FC<CartPanelProps> = ({
   customerName,
   customerPhone,
   discount,
+  matchedCustomer,
+  pointsRedeemed,
+  onToggleRedeemPoints,
   onUpdateQuantity,
   onRemoveItem,
   onClearCart,
@@ -114,21 +122,59 @@ export const CartPanel: React.FC<CartPanelProps> = ({
         )}
 
         {/* Customer Details Toggle / Compact Input */}
-        <div className="grid grid-cols-2 gap-2">
-          <input
-            type="text"
-            value={customerName}
-            onChange={(e) => onCustomerNameChange(e.target.value)}
-            placeholder="Customer Name (opt)"
-            className="w-full rounded-lg border border-oonjal-border bg-oonjal-surface px-2.5 py-1.5 text-xs text-oonjal-cream placeholder-zinc-500 focus:border-oonjal-gold focus:outline-none"
-          />
-          <input
-            type="text"
-            value={customerPhone}
-            onChange={(e) => onCustomerPhoneChange(e.target.value)}
-            placeholder="Phone (07x xxx xxxx)"
-            className="w-full rounded-lg border border-oonjal-border bg-oonjal-surface px-2.5 py-1.5 text-xs text-oonjal-cream placeholder-zinc-500 focus:border-oonjal-gold focus:outline-none"
-          />
+        <div className="space-y-1.5">
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              type="text"
+              value={customerName}
+              onChange={(e) => onCustomerNameChange(e.target.value)}
+              placeholder="Customer Name (opt)"
+              className="w-full rounded-lg border border-oonjal-border bg-oonjal-surface px-2.5 py-1.5 text-xs text-oonjal-cream placeholder-zinc-500 focus:border-oonjal-gold focus:outline-none"
+            />
+            <input
+              type="text"
+              value={customerPhone}
+              onChange={(e) => onCustomerPhoneChange(e.target.value)}
+              placeholder="Phone (07x xxx xxxx)"
+              className="w-full rounded-lg border border-oonjal-border bg-oonjal-surface px-2.5 py-1.5 text-xs text-oonjal-cream placeholder-zinc-500 focus:border-oonjal-gold focus:outline-none"
+            />
+          </div>
+
+          {/* Member Loyalty Recognition Pill */}
+          {matchedCustomer && (
+            <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-1 animate-in fade-in">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 font-semibold text-amber-300">
+                  {matchedCustomer.tier === 'vip' ? (
+                    <Crown className="w-3.5 h-3.5 text-purple-400" />
+                  ) : (
+                    <Award className="w-3.5 h-3.5 text-amber-400" />
+                  )}
+                  <span className="capitalize">{matchedCustomer.tier} Member</span>
+                </div>
+                <span className="font-bold text-amber-400">
+                  {matchedCustomer.loyalty_points} pts (Rs. {matchedCustomer.loyalty_points})
+                </span>
+              </div>
+
+              {matchedCustomer.loyalty_points > 0 && onToggleRedeemPoints && (
+                <button
+                  type="button"
+                  onClick={onToggleRedeemPoints}
+                  className={`w-full mt-1 py-1 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                    pointsRedeemed && pointsRedeemed > 0
+                      ? 'bg-emerald-500 text-black shadow-sm'
+                      : 'bg-zinc-800 text-amber-300 hover:bg-zinc-750 border border-zinc-700'
+                  }`}
+                >
+                  <Sparkles className="w-3 h-3" />
+                  {pointsRedeemed && pointsRedeemed > 0
+                    ? `Redeeming ${pointsRedeemed} pts (-Rs. ${pointsRedeemed})`
+                    : `Redeem ${Math.min(matchedCustomer.loyalty_points, subtotal)} pts for Rs. ${Math.min(matchedCustomer.loyalty_points, subtotal)} OFF`}
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

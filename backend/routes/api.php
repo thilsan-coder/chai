@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\KdsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\SystemController;
@@ -61,6 +62,14 @@ Route::get('/suppliers', [SupplierController::class, 'index']);
 Route::post('/suppliers', [SupplierController::class, 'store']);
 Route::put('/suppliers/{id}', [SupplierController::class, 'update']);
 Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy']);
+
+// Customers & Loyalty System (Part 8)
+Route::get('/customers/lookup', [CustomerController::class, 'lookup']);
+Route::get('/customers', [CustomerController::class, 'index']);
+Route::post('/customers', [CustomerController::class, 'store']);
+Route::get('/customers/{id}', [CustomerController::class, 'show']);
+Route::put('/customers/{id}', [CustomerController::class, 'update']);
+Route::post('/customers/{id}/points', [CustomerController::class, 'adjustPoints']);
 
 // Authenticated staff routes
 Route::middleware('auth:sanctum')->group(function () {

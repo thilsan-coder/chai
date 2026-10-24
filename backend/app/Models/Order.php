@@ -28,8 +28,11 @@ class Order extends Model
         'total',
         'amount_tendered',
         'change_due',
+        'points_earned',
+        'points_redeemed',
         'notes',
         'user_id',
+        'customer_id',
     ];
 
     protected $casts = [
@@ -40,6 +43,8 @@ class Order extends Model
         'total' => 'float',
         'amount_tendered' => 'float',
         'change_due' => 'float',
+        'points_earned' => 'integer',
+        'points_redeemed' => 'integer',
     ];
 
     public function items(): HasMany
@@ -50,6 +55,11 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     /**

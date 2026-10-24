@@ -28,6 +28,12 @@ export const navigationSections = [
     ],
   },
   {
+    title: 'Customers & CRM',
+    items: [
+      { name: 'Customers & Loyalty', path: '/customers', icon: 'Users', badge: 'Club' },
+    ],
+  },
+  {
     title: 'Menu & Food',
     items: [
       { name: 'Menu & Items', path: '/menu', icon: 'UtensilsCrossed' },

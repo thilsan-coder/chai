@@ -85,6 +85,7 @@ class OrderController extends Controller
             'total' => 'required|numeric|min:0',
             'amount_tendered' => 'nullable|numeric|min:0',
             'change_due' => 'nullable|numeric|min:0',
+            'points_redeemed' => 'nullable|integer|min:0',
             'notes' => 'nullable|string',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'nullable|integer',
@@ -115,6 +116,28 @@ class OrderController extends Controller
                     $changeDue = max(0, round($amountTendered - $total, 2));
                 }
 
+                $customerId = null;
+                $pointsEarned = 0;
+                $pointsRedeemed = (int) ($validated['points_redeemed'] ?? 0);
+
+                if (!empty($validated['customer_phone']) && class_exists(\App\Models\Customer::class)) {
+                    $customer = \App\Models\Customer::firstOrCreate(
+                        ['phone' => trim($validated['customer_phone'])],
+                        ['name' => !empty($validated['customer_name']) ? $validated['customer_name'] : 'Guest Customer', 'tier' => 'bronze']
+                    );
+
+                    $customerId = $customer->id;
+                    $pointsEarned = (int) floor($total / 100);
+
+                    $customer->total_spent += $total;
+                    $customer->total_visits += 1;
+                    $customer->loyalty_points = max(0, $customer->loyalty_points - $pointsRedeemed + $pointsEarned);
+                    if (!empty($validated['customer_name']) && $customer->name === 'Guest Customer') {
+                        $customer->name = $validated['customer_name'];
+                    }
+                    $customer->recalculateTier();
+                }
+
                 $order = Order::create([
                     'order_number' => $orderNumber,
                     'token_number' => $tokenNumber,
@@ -131,6 +154,9 @@ class OrderController extends Controller
                     'total' => $total,
                     'amount_tendered' => $amountTendered,
                     'change_due' => $changeDue,
+                    'points_earned' => $pointsEarned,
+                    'points_redeemed' => $pointsRedeemed,
+                    'customer_id' => $customerId,
                     'notes' => $validated['notes'] ?? null,
                     'user_id' => $request->user()?->id,
                 ]);

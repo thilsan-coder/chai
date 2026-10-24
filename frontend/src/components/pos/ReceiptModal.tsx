@@ -179,6 +179,23 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
                 </div>
               </>
             )}
+
+            {Boolean((order.points_earned && order.points_earned > 0) || (order.points_redeemed && order.points_redeemed > 0)) && (
+              <div className="pt-1 mt-1 border-t border-dotted border-zinc-300 text-[10px]">
+                {Boolean(order.points_redeemed && order.points_redeemed > 0) && (
+                  <div className="flex justify-between text-amber-800">
+                    <span>Points Redeemed:</span>
+                    <span>-{order.points_redeemed} pts</span>
+                  </div>
+                )}
+                {Boolean(order.points_earned && order.points_earned > 0) && (
+                  <div className="flex justify-between font-semibold text-emerald-800">
+                    <span>Points Earned (1pt/Rs.100):</span>
+                    <span>+{order.points_earned} pts</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Footer Thank You Note */}

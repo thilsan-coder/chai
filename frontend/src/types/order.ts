@@ -29,8 +29,11 @@ export interface Order {
   token_number: number;
   order_type: OrderType;
   table_number?: string;
+  customer_id?: number;
   customer_name?: string;
   customer_phone?: string;
+  points_earned?: number;
+  points_redeemed?: number;
   status: OrderStatus;
   payment_status: PaymentStatus;
   payment_method: PaymentMethod;
@@ -68,8 +71,10 @@ export interface CartItem {
 export interface CreateOrderPayload {
   order_type: OrderType;
   table_number?: string;
+  customer_id?: number;
   customer_name?: string;
   customer_phone?: string;
+  points_redeemed?: number;
   payment_method: PaymentMethod;
   payment_status?: PaymentStatus;
   subtotal: number;
