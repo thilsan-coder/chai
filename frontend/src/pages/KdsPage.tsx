@@ -12,7 +12,7 @@ export const KdsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [lastUpdated, setLastUpdated] = useState<Date>(() => new Date());
 
   const previousOrderIdsRef = useRef<Set<number>>(new Set());
 
