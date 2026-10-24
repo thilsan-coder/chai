@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\KdsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\SystemController;
@@ -70,6 +71,13 @@ Route::post('/customers', [CustomerController::class, 'store']);
 Route::get('/customers/{id}', [CustomerController::class, 'show']);
 Route::put('/customers/{id}', [CustomerController::class, 'update']);
 Route::post('/customers/{id}/points', [CustomerController::class, 'adjustPoints']);
+
+// Daily Expenses & Petty Cash (Part 9)
+Route::get('/expenses', [ExpenseController::class, 'index']);
+Route::post('/expenses', [ExpenseController::class, 'store']);
+Route::get('/expenses/{id}', [ExpenseController::class, 'show']);
+Route::put('/expenses/{id}', [ExpenseController::class, 'update']);
+Route::delete('/expenses/{id}', [ExpenseController::class, 'destroy']);
 
 // Authenticated staff routes
 Route::middleware('auth:sanctum')->group(function () {

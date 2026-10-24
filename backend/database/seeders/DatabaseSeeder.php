@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             TableSeeder::class,
             InventorySeeder::class,
             CustomerSeeder::class,
+            ExpenseSeeder::class,
         ]);
     }
 }

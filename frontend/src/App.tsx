@@ -11,6 +11,7 @@ import { CategoriesPage } from './pages/CategoriesPage';
 import { InventoryPage } from './pages/InventoryPage';
 import { PurchasesPage } from './pages/PurchasesPage';
 import { CustomersPage } from './pages/CustomersPage';
+import { ExpensesPage } from './pages/ExpensesPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { AuthProvider } from './context/AuthContext';
 
@@ -56,23 +57,7 @@ export const App: React.FC = () => {
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="purchases" element={<PurchasesPage />} />
 
-          <Route
-            path="expenses"
-            element={
-              <PlaceholderPage
-                title="Daily Cafe Expenses"
-                subtitle="Record operating costs (utilities, gas, salaries, maintenance, rent)"
-                partTag="Planned: Part 9"
-                moduleCode="MOD-09-EXPENSES"
-                features={[
-                  'Categorized expenses (Gas, Electricity, Salaries, Packaging)',
-                  'Payment method (Cash, Bank)',
-                  'Expense receipt attachments and notes',
-                  'Business session expense segregation',
-                ]}
-              />
-            }
-          />
+          <Route path="expenses" element={<ExpensesPage />} />
 
           <Route
             path="bank-transfers"
