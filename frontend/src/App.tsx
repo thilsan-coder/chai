@@ -4,6 +4,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { PosPage } from './pages/PosPage';
 import { OrdersPage } from './pages/OrdersPage';
+import { KdsPage } from './pages/KdsPage';
 import { MenuPage } from './pages/MenuPage';
 import { CategoriesPage } from './pages/CategoriesPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
@@ -21,6 +22,7 @@ export const App: React.FC = () => {
 
           <Route path="pos" element={<PosPage />} />
           <Route path="orders" element={<OrdersPage />} />
+          <Route path="kds" element={<KdsPage />} />
 
           <Route path="menu" element={<MenuPage />} />
           <Route path="categories" element={<CategoriesPage />} />

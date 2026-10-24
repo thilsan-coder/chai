@@ -18,6 +18,7 @@ import {
   Sparkle,
   Database,
   ArrowRightLeft,
+  Flame,
 } from 'lucide-react';
 import { navigationSections, BUSINESS_CONFIG } from '../../constants/theme';
 import { useAuth } from '../../hooks/useAuth';
@@ -38,6 +39,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   BarChart3,
   Users,
   Settings,
+  Flame,
 };
 
 export const Sidebar: React.FC = () => {

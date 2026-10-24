@@ -17,6 +17,7 @@ import {
   Users,
   Settings,
   Clock,
+  Flame,
 } from 'lucide-react';
 import { navigationSections, BUSINESS_CONFIG } from '../../constants/theme';
 
@@ -34,6 +35,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   BarChart3,
   Users,
   Settings,
+  Flame,
 };
 
 export interface MobileNavProps {
