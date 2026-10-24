@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\KdsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SystemController;
@@ -30,6 +31,11 @@ Route::get('/orders', [OrderController::class, 'index']);
 Route::post('/orders', [OrderController::class, 'store']);
 Route::get('/orders/{id}', [OrderController::class, 'show']);
 Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus']);
+
+// Kitchen Display System (KDS) routes
+Route::get('/kds/orders', [KdsController::class, 'orders']);
+Route::patch('/kds/orders/{id}/status', [KdsController::class, 'updateStatus']);
+Route::get('/kds/stats', [KdsController::class, 'stats']);
 
 // Authenticated staff routes
 Route::middleware('auth:sanctum')->group(function () {
