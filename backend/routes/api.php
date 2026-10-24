@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SystemController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,13 @@ Route::get('/categories/{category}', [CategoryController::class, 'show']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product}', [ProductController::class, 'show']);
 Route::post('/products/{product}/toggle-availability', [ProductController::class, 'toggleAvailability']);
+
+// Order management (Available for POS billing and KDS)
+Route::get('/orders/daily-summary', [OrderController::class, 'dailySummary']);
+Route::get('/orders', [OrderController::class, 'index']);
+Route::post('/orders', [OrderController::class, 'store']);
+Route::get('/orders/{id}', [OrderController::class, 'show']);
+Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 
 // Authenticated staff routes
 Route::middleware('auth:sanctum')->group(function () {

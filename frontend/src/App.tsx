@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
+import { PosPage } from './pages/PosPage';
+import { OrdersPage } from './pages/OrdersPage';
 import { MenuPage } from './pages/MenuPage';
 import { CategoriesPage } from './pages/CategoriesPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
@@ -17,44 +19,8 @@ export const App: React.FC = () => {
 
           <Route index element={<DashboardPage />} />
 
-          <Route
-            path="pos"
-            element={
-              <PlaceholderPage
-                title="POS & Quick Billing Counter"
-                subtitle="Optimized for 350+ orders/day with fast category selection, touch cart, and table assignment"
-                partTag="Planned: Part 4"
-                moduleCode="MOD-02-POS"
-                features={[
-                  'Rapid chai & food item selection',
-                  'Dine-in table assignment & Takeaway toggle',
-                  'Item variants and custom add-ons',
-                  'Subtotal, discounts, and LKR net calculation',
-                  'Duplicate-submission protection',
-                  'Instant token generation on checkout',
-                ]}
-              />
-            }
-          />
-
-          <Route
-            path="orders"
-            element={
-              <PlaceholderPage
-                title="Order Status & Token Workflow"
-                subtitle="Live token dispatch and order stage tracking for cashiers and kitchen crew"
-                partTag="Planned: Part 5"
-                moduleCode="MOD-03-TOKENS"
-                features={[
-                  'Unique daily token numbers (#101, #102...)',
-                  'Status stages: Pending → Preparing → Ready → Completed',
-                  'Fast token lookup for cashier-to-kitchen calls',
-                  'Order cancellation & refund controls',
-                  'Historical order lookup and reprint',
-                ]}
-              />
-            }
-          />
+          <Route path="pos" element={<PosPage />} />
+          <Route path="orders" element={<OrdersPage />} />
 
           <Route path="menu" element={<MenuPage />} />
           <Route path="categories" element={<CategoriesPage />} />
