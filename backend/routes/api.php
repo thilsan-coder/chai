@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\KdsController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\InventoryController;
@@ -78,6 +79,10 @@ Route::post('/expenses', [ExpenseController::class, 'store']);
 Route::get('/expenses/{id}', [ExpenseController::class, 'show']);
 Route::put('/expenses/{id}', [ExpenseController::class, 'update']);
 Route::delete('/expenses/{id}', [ExpenseController::class, 'destroy']);
+
+// Financial Reports & P&L Analytics (Part 10)
+Route::get('/reports/dashboard', [ReportController::class, 'dashboard']);
+Route::get('/reports/daily-sessions', [ReportController::class, 'dailySessions']);
 
 // Authenticated staff routes
 Route::middleware('auth:sanctum')->group(function () {

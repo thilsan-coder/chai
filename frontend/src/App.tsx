@@ -12,6 +12,7 @@ import { InventoryPage } from './pages/InventoryPage';
 import { PurchasesPage } from './pages/PurchasesPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { ExpensesPage } from './pages/ExpensesPage';
+import { ReportsPage } from './pages/ReportsPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { AuthProvider } from './context/AuthContext';
 
@@ -78,24 +79,7 @@ export const App: React.FC = () => {
             }
           />
 
-          <Route
-            path="reports"
-            element={
-              <PlaceholderPage
-                title="Financial Reports & Business Analytics"
-                subtitle="Daily 4:00 PM - 1:00 AM session reports, cash vs bank breakdown, estimated P&L"
-                partTag="Planned: Part 10"
-                moduleCode="MOD-11-REPORTS"
-                features={[
-                  'Sri Lankan 4 PM - 1 AM session boundary accounting',
-                  'Cash collections vs bank transfer collections',
-                  'Gross sales, direct expenses, and estimated P&L',
-                  'Top-selling chai, burger, and combo statistics',
-                  'Exportable summaries for cafe owner',
-                ]}
-              />
-            }
-          />
+          <Route path="reports" element={<ReportsPage />} />
 
           <Route
             path="users"
